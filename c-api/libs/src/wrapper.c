@@ -22,9 +22,9 @@ static PyObject *py_objective_function = NULL;
 /**
  * @fn static int32_t alternative_callback_function(int32_t ndim, const double *input, double *output);
  * @brief call python function from c library
- * @param[in]  ndim  number of dimensions
- * @param[in]  input input vector
- * @param[out] outpu outpu vector
+ * @param[in]  ndim   number of dimensions
+ * @param[in]  input  input vector
+ * @param[out] output outpu vector
  * @return NEWTONLIB_SUCCESS success
  *         NEWTONLIB_FAILED  failed
 */
@@ -35,7 +35,7 @@ static int32_t alternative_callback_function(int32_t ndim, const double *input, 
     PyArrayObject *np_arr = NULL;
     npy_intp dims[1] = {0};
 
-    if (NULL != py_objective_function) {
+    if (PyCallable_Check(py_objective_function)) {
         //! set argument
         dims[0] = ndim;
         numpy_list = PyArray_SimpleNew(1, &dims[0], NPY_DOUBLE);
@@ -262,7 +262,7 @@ static struct PyModuleDef wrapper_newtonlib = {
 };
 
 /**
- * @fn PyMODINIT_FUNC PyInit_wrapper_newton(void)
+ * @fn PyMODINIT_FUNC PyInit_wrapper_newtonlib(void)
  * @brief PyInit function
 */
 PyMODINIT_FUNC PyInit_wrapper_newtonlib(void) {

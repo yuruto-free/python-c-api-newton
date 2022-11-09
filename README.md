@@ -23,7 +23,7 @@ Next, type the command and compile C module.
 ```
 pipenv shell
 
-cd python-c-api
+cd c-api
 
 chmod +x compile.sh
 ./compile.sh
@@ -40,5 +40,5 @@ pipenv shell
 # execute original script
 python original/newton_method.py
 # execute customized script with c library
-python python-c-api/newton-method-with-clib.py
+python c-api/newton-method-with-clib.py
 ```
