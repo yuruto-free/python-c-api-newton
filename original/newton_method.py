@@ -114,7 +114,7 @@ if __name__ == '__main__':
     print('[init value] x: {:.5f}, y: {:.5f}'.format(*vec))
     hat, _ = newton_method(vec, max_iter, tol=tol)
     err = np.linalg.norm(hat - exact_vec)
-    print('[estimated]  x: {:.5f}, y: {:.5f} ({:.5f})'.format(*hat, err))
+    print('[estimated]  x: {:.5f}, y: {:.5f} ({:.5e})'.format(*hat, err))
     print('')
 
     # ===============
@@ -126,4 +126,4 @@ if __name__ == '__main__':
     print('[init value] x: {:.5f}, y: {:.5f}'.format(*vec))
     hat, _ = newton_method(vec, max_iter, tol=tol)
     err = np.linalg.norm(hat - exact_vec)
-    print('x: {:.5f}, y: {:.5f} ({:.5f})'.format(*hat, err))
+    print('[estimated]  x: {:.5f}, y: {:.5f} ({:.5e})'.format(*hat, err))
