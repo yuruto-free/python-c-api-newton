@@ -12,10 +12,10 @@
 #define NEWTONLIB_MEPS (1e-12)  //!< machine epsilon value
 
 /**
- * @struct NewtonLib_JacobianParam_t
+ * @struct JacobianParam_t
  * @brief structure of argument of calc_Jacobian_matrix function
 */
-struct NewtonLib_JacobianParam_t {
+struct JacobianParam_t {
     int32_t ndim;                //!< number of dimensions
     double *vec;                 //!< vector of x
     double delta;                //!< fixed difference value
@@ -41,7 +41,7 @@ static int32_t copy_array(int32_t ndim, const double *input, double *output);
 */
 static double norm(int32_t ndim, const double *vec);
 /**
- * @fn static int32_t calc_Jacobian_matrix(const struct NewtonLib_JacobianParam_t *param, double *work, double *jacobian)
+ * @fn static int32_t calc_Jacobian_matrix(const struct JacobianParam_t *param, double *work, double *jacobian)
  * @brief calculate Jacobian matrix
  * @param[in]  param    function arguments
  * @param[in]  work     workspace
@@ -49,7 +49,7 @@ static double norm(int32_t ndim, const double *vec);
  * @return NEWTONLIB_RETURN_OK success
  *         NEWTONLIB_RETURN_NG failed
 */
-static int32_t calc_Jacobian_matrix(const struct NewtonLib_JacobianParam_t *param, double *work, double *jacobian);
+static int32_t calc_Jacobian_matrix(const struct JacobianParam_t *param, double *work, double *jacobian);
 /**
  * @fn static int32_t pivot_selection(int32_t ndim, int32_t col, double *matrix)
  * @brief select pivot
@@ -91,13 +91,13 @@ int32_t NewtonLib_newton_method(const struct NewtonLib_ArgParam_t *args, struct 
     double tol;
     double *hat, *diff_vec, *jacobian, *work;
     NEWTONLIB_CALLBACK callback;
-    struct NewtonLib_JacobianParam_t param;
+    struct JacobianParam_t param;
 
     //! initialize
     diff_vec = NULL;
     jacobian = NULL;
     work = NULL;
-    memset(&param, 0, sizeof(struct NewtonLib_JacobianParam_t));
+    memset(&param, 0, sizeof(struct JacobianParam_t));
 
     //! validate arguments
     if ((NULL != args) && (NULL != output)) {
@@ -132,7 +132,7 @@ int32_t NewtonLib_newton_method(const struct NewtonLib_ArgParam_t *args, struct 
                 break;
             }
             //! Step1: calculate Jacobian matrix
-            func_val = calc_Jacobian_matrix((const struct NewtonLib_JacobianParam_t *)&param, work, jacobian);
+            func_val = calc_Jacobian_matrix((const struct JacobianParam_t *)&param, work, jacobian);
             if ((int32_t)NEWTONLIB_RETURN_OK != func_val) {
                 ret = (int32_t)NEWTONLIB_JACOBIAN;
                 goto EXIT_NEWTON_METHOD;
@@ -195,18 +195,19 @@ static int32_t copy_array(int32_t ndim, const double *input, double *output) {
 
 static double norm(int32_t ndim, const double *vec) {
     int32_t idx;
-    double sum, out;
+    double val, sum, out;
     sum = 0.0;
 
     for (idx = 0; idx < ndim; idx++) {
-        sum += vec[idx] * vec[idx];
+        val = vec[idx];
+        sum += val * val;
     }
     out = sqrt(sum);
 
     return out;
 }
 
-static int32_t calc_Jacobian_matrix(const struct NewtonLib_JacobianParam_t *param, double *work, double *jacobian) {
+static int32_t calc_Jacobian_matrix(const struct JacobianParam_t *param, double *work, double *jacobian) {
     int32_t ret = (int32_t)NEWTONLIB_RETURN_NG;
     int32_t row, col, idx, func_val;
     int32_t ndim;
@@ -219,7 +220,7 @@ static int32_t calc_Jacobian_matrix(const struct NewtonLib_JacobianParam_t *para
     vec = &work[0];
     right = &work[ndim];
     left = &work[ndim*2];
-    (void)copy_array(ndim, (const double *)param->vec, &work[0]);
+    (void)copy_array(ndim, (const double *)param->vec, vec);
 
     for (col = 0; col < ndim; col++) {
         val = vec[col];
@@ -300,7 +301,7 @@ static int32_t solve_sle(int32_t ndim, double *matrix, double *vec) {
         pivot = pivot_selection(ndim, idx, matrix);
         //! swap if maximum value is not diagonal element
         if (idx != pivot) {
-            swap(ndim, idx, pivot, matrix, vec);
+            (void)swap(ndim, idx, pivot, matrix, vec);
         }
         //! get diagonal element
         diag = matrix[idx * ndim + idx];

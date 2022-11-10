@@ -12,7 +12,8 @@ setup(
                 'libs/src/wrapper.c',
                 'libs/src/newton_method.c',
             ],
-            include_dirs=['./libs/include', np.get_include()]
+            include_dirs=['./libs/include', np.get_include()],
+            extra_compile_args=['-O3'],
         ),
     ],
     zip_safe=False,
