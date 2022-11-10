@@ -47,8 +47,11 @@ struct NewtonLib_Output_t {
  * @brief execute newton method
  * @param[in]  args   function argument
  * @param[out] output output data
- * @return NEWTONLIB_SUCCESS success
- *         NEWTONLIB_FAILED  failed
+ * @return NEWTONLIB_SUCCESS    success
+ *         NEWTONLIB_FAILED     failed
+ *         NEWTONLIB_JACOBIAN   failed to calculate Jacobian matrix
+ *         NEWTONLIB_OBJFUNCVAL failed to calculate objective function value
+ *         NEWTONLIB_SOLVE_SLE  failed to solve simultaneous linear equations
 */
 extern int32_t NewtonLib_newton_method(const struct NewtonLib_ArgParam_t *args, struct NewtonLib_Output_t *output);
 
