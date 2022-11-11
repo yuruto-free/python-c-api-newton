@@ -13,10 +13,6 @@ def objective_function(vec):
     fv : numpy.ndarray
         vector of f(vec)
     """
-
-    # | x     + 2y     = -1          x     + 2y     + 1 = 0
-    # |                         <=>
-    # | x^{2} + 2y^{2} = 3           x^{2} + 2y^{2} - 3 = 0
     x, y = vec
 
     fv = np.array([
@@ -46,16 +42,17 @@ def calc_Jacobian_matrix(vec, delta=1e-3):
     Jf = np.empty((ndim, ndim), dtype=np.float64)
 
     for idx in np.arange(ndim):
-        tmp = np.copy(vec)
+        val = vec[idx]
         # calculate f(x + delta)
-        tmp[idx] += delta
-        right_f= objective_function(tmp)
+        vec[idx] = val + delta
+        right_f= objective_function(vec)
         # calculate f(x - delta)
-        tmp[idx] -= 2.0 * delta
-        left_f = objective_function(tmp)
+        vec[idx] = val - delta
+        left_f = objective_function(vec)
         # calculate 0.5 * (f(x + delta) - f(x - delta)) / delta
         diffs = 0.5 * (right_f - left_f) / delta
         Jf[:, idx] = diffs
+        vec[idx] = val
 
     return Jf
 
