@@ -13,10 +13,6 @@ def objective_function(vec):
     fv : numpy.ndarray
         vector of f(vec)
     """
-
-    # | x     + 2y     = -1          x     + 2y     + 1 = 0
-    # |                         <=>
-    # | x^{2} + 2y^{2} = 3           x^{2} + 2y^{2} - 3 = 0
     x, y = vec
 
     fv = np.array([
